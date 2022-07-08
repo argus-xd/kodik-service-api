@@ -17,4 +17,11 @@ export class KodikController {
 
         return JSON.stringify(data);
     }
+
+    @Get('linkList')
+    async linkList(@Query('title') title: string): Promise<string> {
+        const data = await this.kodikService.linkList({'title': title});
+
+        return JSON.stringify(data);
+    }
 }
