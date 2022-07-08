@@ -21,4 +21,16 @@ describe('AppController (e2e)', () => {
 			.expect(200)
 			.expect('Hello World!');
 	});
+
+	it('/kodik/search (GET)', async () => {
+		const data = await request(app.getHttpServer())
+			.get('/kodik/search?title=naruto')
+			.expect(200)
+			.then(response => {
+				return JSON.parse(response.text);
+			});
+
+		expect(data).not.toHaveLength(0);
+		expect(data[0]).toHaveProperty('title');
+	});
 });
