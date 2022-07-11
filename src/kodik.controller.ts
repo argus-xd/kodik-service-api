@@ -29,7 +29,6 @@ export class KodikController {
 	@Get('translation')
 	async translation(@Query('shikimori_id') shikimori_id: string): Promise<string> {
 		const translationList = await this.kodikService.translationList({ shikimori_id });
-		console.log(translationList);
 
 		return JSON.stringify(translationList);
 	}
@@ -41,7 +40,6 @@ export class KodikController {
 		@Query('hash') hash: string,
 	): Promise<string> {
 		const translationList = await this.kodikService.translationQuality({ type, id, hash });
-		console.log(translationList);
 
 		return JSON.stringify(translationList);
 	}
@@ -53,7 +51,6 @@ export class KodikController {
 		@Query('with_episodes') with_episodes: boolean,
 	): Promise<string> {
 		const episodesList = await this.kodikService.episodesList({ shikimori_id, translation_id, with_episodes });
-		console.log(episodesList);
 
 		return JSON.stringify(episodesList);
 	}
@@ -66,7 +63,6 @@ export class KodikController {
 		@Query('quality') quality: string,
 	): Promise<string> {
 		const episodesList = await this.kodikService.gviLinksSrc({ type, id, hash, quality });
-		console.log(episodesList);
 
 		return JSON.stringify(episodesList);
 	}

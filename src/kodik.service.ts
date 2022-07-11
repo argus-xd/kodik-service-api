@@ -19,7 +19,10 @@ const simpleGetRequest = (endpoint, params = {}, customSettings = {}): [] => {
 
 			return data.data;
 		})
-		.catch((error) => console.log(error));
+		.catch((error) => {
+			// console.log(error);
+			return error;
+		});
 };
 
 const simplePostRequest = (endpoint, params = {}, customSettings = {}): [] => {
@@ -45,6 +48,13 @@ interface ISearch {
 	translation_id?: string;
 	with_material_data?: boolean;
 	with_episodes?: boolean;
+}
+
+interface IMedia {
+	type: string;
+	id: string;
+	hash: string;
+	quality?: string;
 }
 
 @Injectable()
@@ -96,13 +106,13 @@ export class KodikService {
 		const data = await simpleGetRequest(`/${type}/${id}/${hash}/720p`, {}, { baseURL: 'http://aniqit.com' });
 
 		// @ts-ignore
-		const [,type2] = data.match(/videoInfo.type = '(.*?)'/);
+		const [, type2] = data.match(/videoInfo.type = '(.*?)'/);
 		// @ts-ignore
-		const [,id2] = data.match(/videoInfo.id = '(.*?)'/);
+		const [, id2] = data.match(/videoInfo.id = '(.*?)'/);
 		// @ts-ignore
-		const [,hash2] = data.match(/videoInfo.hash = '(.*?)'/);
+		const [, hash2] = data.match(/videoInfo.hash = '(.*?)'/);
 
- 		return { type: type2, hash:hash2, id: id2 }
+		return { type: type2, hash: hash2, id: id2 };
 	}
 
 	async translationQuality({ type, id, hash }) {
@@ -119,14 +129,14 @@ export class KodikService {
 		return quality;
 	}
 
-	async episodesList({ shikimori_id,translation_id,with_episodes }: ISearch) {
-		const data = await this.search({ shikimori_id,translation_id,with_episodes });
+	async episodesList({ shikimori_id, translation_id, with_episodes }: ISearch) {
+		const data = await this.search({ shikimori_id, translation_id, with_episodes });
 		// @ts-ignore
 		const list = data[0]['seasons'][1]['episodes'];
 		return list;
 	}
 
-	async gviLinksSrc({ type, id, hash, quality }) {
+	async gviLinksSrc({ type, id, hash, quality }: IMedia) {
 		const data: Array<{}> = await simplePostRequest('/gvi', { type, id, hash });
 		const links = data['links'];
 		const keyMaxQuality = Object.keys(links).at(-1);
