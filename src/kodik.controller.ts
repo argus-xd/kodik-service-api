@@ -66,4 +66,16 @@ export class KodikController {
 
 		return JSON.stringify(episodesList);
 	}
+
+	@Get('fullMedia')
+	async fullMedia(
+		@Query('shikimori_id') shikimori_id: string,
+		@Query('translation_id') translation_id: string,
+		@Query('episode') episode: string,
+		@Query('quality') quality: string,
+	): Promise<string> {
+		const episodesList = await this.kodikService.fullMedia({ shikimori_id, translation_id, episode, quality });
+
+		return JSON.stringify(episodesList);
+	}
 }

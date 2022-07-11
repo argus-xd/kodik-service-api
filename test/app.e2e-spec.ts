@@ -145,4 +145,24 @@ describe('Kodik (e2e)', () => {
 			expect(data.includes('.mp4')).toBe(true);
 		});
 	});
+
+	describe('fullMedia', () => {
+		it('/kodik/fullMedia', async () => {
+			const paramsString = new URLSearchParams({
+				shikimori_id: '33',
+				translation_id: '757',
+				episode: '5',
+				quality: '720',
+			}).toString();
+
+			const data = await request(app.getHttpServer())
+				.get(`/kodik/fullMedia?${paramsString}`)
+				.expect(200)
+				.then(response => {
+					return JSON.parse(response.text);
+				});
+
+			expect(data.includes('.mp4')).toBe(true);
+		});
+	});
 });

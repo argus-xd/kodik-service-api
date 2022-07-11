@@ -57,6 +57,13 @@ interface IMedia {
 	quality?: string;
 }
 
+interface IFullMedia {
+	shikimori_id: string;
+	translation_id: string;
+	episode: string;
+	quality?: string;
+}
+
 @Injectable()
 export class KodikService {
 	async search(params: ISearch): Promise<[]> {
@@ -144,6 +151,15 @@ export class KodikService {
 		const src = this.deCodeLink(srcHash);
 		const mp4 = src.split(':hls');
 		return mp4[0];
+	}
+
+	async fullMedia({ shikimori_id, translation_id, episode, quality }: IFullMedia) {
+		const episodeList = await this.episodesList({ shikimori_id, translation_id, with_episodes: true });
+		const episodeSelect = episodeList[episode];
+		const parseLink = this.parseLink(episodeSelect);
+		const gviLinksSrc = await this.gviLinksSrc({ ...parseLink, quality });
+
+		return gviLinksSrc;
 	}
 
 	private deCodeLink(src) {
