@@ -6,6 +6,8 @@ import Config from './config';
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 
+	app.enableCors();
+
 	const config = new DocumentBuilder()
 		.setTitle('Kodik API')
 		.setDescription('The Kodik API description')

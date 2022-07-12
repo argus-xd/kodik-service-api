@@ -9,16 +9,19 @@ const clientGvi = require('axios').create({
 	baseURL: 'http://aniqit.com',
 });
 
+const getRequest = (endpoint, params = {}, customSettings = {}): [] => {
+	return client
+		.get(endpoint, { params: { ...params }, ...customSettings })
+		.then((data) => data.data)
+		.catch((error) => {
+			return error;
+		});
+};
+
 const simpleGetRequest = (endpoint, params = {}, customSettings = {}): [] => {
 	return client
 		.get(endpoint, { params: { token: config.clients.kodik.authToken, ...params }, ...customSettings })
-		.then((data) => {
-			if (data.data.results) {
-				return data.data.results;
-			}
-
-			return data.data;
-		})
+		.then(({ data }) => data.results)
 		.catch((error) => {
 			// console.log(error);
 			return error;
@@ -33,14 +36,6 @@ const simplePostRequest = (endpoint, params = {}, customSettings = {}): [] => {
 		})
 		.catch((error) => console.log(error));
 };
-
-function paramsToObject(entries) {
-	const result = {};
-	for (const [key, value] of entries) { // each 'entry' is a [key, value] tupple
-		result[key] = value;
-	}
-	return result;
-}
 
 interface ISearch {
 	title?: string;
@@ -110,7 +105,7 @@ export class KodikService {
 	}
 
 	private async getHashByLink({ type, id, hash }) {
-		const data = await simpleGetRequest(`/${type}/${id}/${hash}/720p`, {}, { baseURL: 'http://aniqit.com' });
+		const data = await getRequest(`/${type}/${id}/${hash}/720p`, {}, { baseURL: 'http://aniqit.com' });
 
 		// @ts-ignore
 		const [, type2] = data.match(/videoInfo.type = '(.*?)'/);
